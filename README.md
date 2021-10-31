@@ -1,3 +1,4 @@
 # Data-Science-Portfolio
-Portfolio for storing Data Science Projects
-Welcome to my portfolio
+This repository is my portfolio for storing Data Science Projects.
+/n
+I self-taught data science via online courses and projects for hands-on practices. 
