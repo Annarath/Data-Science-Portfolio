@@ -1,6 +1,6 @@
 # Data-Science-Portfolio
 <br />
-**I am Annarath Photipakraksa.*
+__I am Annarath Photipakraksa.__
 <br />
 **This repository is my portfolio, storing Data Science Projects**
 <br />
