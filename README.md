@@ -21,4 +21,8 @@ House Price Prediction Project
 This is my first ever complete data science priject. The data is from the open competition on Kaggle. The score is evaluated by root mean squared error, which I scored 0.16840. In this project I got to practice my EDA, Feature Engineering (includes cut and combine festures, work with missing datas, and practice Regression ML model. I got to use tools like MinMaxScaler from sklearn for data preprocessing, Sequential ANN model from tensorflow.keras and predict the house price for unknown houses with the model I created.
 <br />
 <br />
+Sony Merger Project
+<br />
+The project is EDA based. I look into each factors that this aquisition by Sony of AWAL and KNR affected and see if there are a problem with this anticpmpetitive act in the Music Industry UK. Moreover, I calculate the HHI and CRK to see analyse the market concentration. All the data are collected and scraped by me with the help of my group member (for the Industrial Economics III group coursework).
+<br />
 Thank you for visiting my portfolio.
