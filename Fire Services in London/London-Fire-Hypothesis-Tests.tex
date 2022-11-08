@@ -1,0 +1,954 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={London Fire},
+  pdfauthor={Annarath},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{London Fire}
+\author{Annarath}
+\date{}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+This report is one of my assignments for the module Business Statistics
+at the Warwick Business School.
+
+\hypertarget{section-1}{%
+\section{Section 1}\label{section-1}}
+
+This report fulfills the requests from Fire service managers and local
+politicians, performing the specific analyses requested.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Provide a breakdown for the sum of all costs associated with
+  responding to fires during the time period, and (separately) the sum
+  of all costs associated with responding to false alarms. Also, the
+  average (mean) cost of responding to a fire, and of responding to a
+  false alarm.
+\item
+  Provide a visualisation showing response times to all incidents where
+  there was indeed a response.
+\item
+  Provide summary statistics for response times in the special service
+  incidences.
+\item
+  Perform a two sample t-test to see if there is a significant
+  difference in the average response times for Ealing area compared to
+  those in Greenwich.
+\item
+  Perform a Estimation approach and assess the confidence interval.
+\end{enumerate}
+
+\hypertarget{import-libraries}{%
+\section{Import Libraries}\label{import-libraries}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr)}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(Rmisc)}
+\FunctionTok{library}\NormalTok{(emmeans)}
+\FunctionTok{library}\NormalTok{(gridExtra)}
+\FunctionTok{library}\NormalTok{(kableExtra)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in !is.null(rmarkdown::metadata$output) && rmarkdown::metadata$output %in% : 'length(x) = 2
+## > 1' in coercion to 'logical(1)'
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{options}\NormalTok{(}\AttributeTok{width=}\DecValTok{100}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{read-data}{%
+\subsection{Read Data}\label{read-data}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Import London Fire data set as fire\_data}
+\NormalTok{fire\_data }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{\textquotesingle{}London\_Fire\_data (2).csv\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 322375 Columns: 39
+## -- Column specification ----------------------------------------------------------------------------
+## Delimiter: ","
+## chr  (20): IncidentNumber, DateOfCall, IncidentGroup, StopCodeDescription, SpecialServiceType, P...
+## dbl  (18): CalYear, HourOfCall, UPRN, USRN, Easting_m, Northing_m, Easting_rounded, Northing_rou...
+## time  (1): TimeOfCall
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+\hypertarget{data-dictionary}{%
+\subsection{Data Dictionary}\label{data-dictionary}}
+
+This Data Dictionary includes only variables that are used in this
+analysis. This description is referred from the Fire service.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.3431}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.6569}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+Variables
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Description
+\end{minipage} \\
+\midrule()
+\endhead
+IncidentGroup & High level description of the incident; Fire, Special
+Service or False Alarm \\
+SpecialServiceType & Special Services are emergencies other than Fire
+that the LFB attend. Special Service Type categories these into 21
+different services \\
+IncGeo\_BoroughName & The Borough name in which the incident was
+geographically located \\
+FirstPumpArriving\_AttendanceTime & The attendance time (in seconds) for
+the first fire engine to arrive after it has been mobilised from a fire
+station (or other location if it was mobile by Brigade Control at the
+time of the call). When fire crews arrive they record their attendance
+using an on-board computer (a Mobile Data Terminal). There will be
+occasions when the first crew to arrive fail to record this correctly
+(either as human error or a delay/ failure in the communications). When
+this happens the time recorded may in fact be the second or third. \\
+Notional Cost (£) & An estimate of the cost of the incident response \\
+\bottomrule()
+\end{longtable}
+
+\hypertarget{data-structure-and-summary}{%
+\subsection{Data Structure and
+Summary}\label{data-structure-and-summary}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Check Data Structure}
+\FunctionTok{str}\NormalTok{(fire\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## spec_tbl_df [322,375 x 39] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ IncidentNumber                        : chr [1:322375] "000006-01012019" "000019-01012019" "000020-01012019" "000021-01012019" ...
+##  $ DateOfCall                            : chr [1:322375] "01-Jan-19" "01-Jan-19" "01-Jan-19" "01-Jan-19" ...
+##  $ CalYear                               : num [1:322375] 2019 2019 2019 2019 2019 ...
+##  $ TimeOfCall                            : 'hms' num [1:322375] 00:01:45 00:04:33 00:04:39 00:04:44 ...
+##   ..- attr(*, "units")= chr "secs"
+##  $ HourOfCall                            : num [1:322375] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ IncidentGroup                         : chr [1:322375] "Special Service" "Fire" "False Alarm" "False Alarm" ...
+##  $ StopCodeDescription                   : chr [1:322375] "Special Service" "Secondary Fire" "False alarm - Good intent" "AFA" ...
+##  $ SpecialServiceType                    : chr [1:322375] "Lift Release" NA NA NA ...
+##  $ PropertyCategory                      : chr [1:322375] "Dwelling" "Outdoor" "Outdoor" "Dwelling" ...
+##  $ PropertyType                          : chr [1:322375] "Purpose Built Flats/Maisonettes - 4 to 9 storeys" "Tree scrub" "Domestic garden (vegetation not equipment)" "Stately Home (part not open to public)" ...
+##  $ AddressQualifier                      : chr [1:322375] "Correct incident location" "On land associated with building" "In street outside gazetteer location" "Within same building" ...
+##  $ Postcode_full                         : chr [1:322375] NA "N9 7HU" "N20 0BB" NA ...
+##  $ Postcode_district                     : chr [1:322375] "SE11" "N9" "N20" "SW7" ...
+##  $ UPRN                                  : num [1:322375] 0.00 2.07e+08 2.00e+08 0.00 0.00 ...
+##  $ USRN                                  : num [1:322375] 21901674 20704497 20037660 8400731 22700484 ...
+##  $ IncGeo_BoroughCode                    : chr [1:322375] "E09000022" "E09000010" "E09000003" "E09000033" ...
+##  $ IncGeo_BoroughName                    : chr [1:322375] "LAMBETH" "ENFIELD" "BARNET" "WESTMINSTER" ...
+##  $ ProperCase                            : chr [1:322375] "Lambeth" "Enfield" "Barnet" "Westminster" ...
+##  $ IncGeo_WardCode                       : chr [1:322375] "E05000427" "E05000204" "E05000043" "E05000637" ...
+##  $ IncGeo_WardName                       : chr [1:322375] "PRINCE'S" "LOWER EDMONTON" "BRUNSWICK PARK" "KNIGHTSBRIDGE AND BELGRAVIA" ...
+##  $ IncGeo_WardNameNew                    : chr [1:322375] "PRINCE'S" "LOWER EDMONTON" "BRUNSWICK PARK" "KNIGHTSBRIDGE AND BELGRAVIA" ...
+##  $ Easting_m                             : num [1:322375] NA 534494 527630 NA NA ...
+##  $ Northing_m                            : num [1:322375] NA 194099 193922 NA NA ...
+##  $ Easting_rounded                       : num [1:322375] 530850 534450 527650 526750 537250 ...
+##  $ Northing_rounded                      : num [1:322375] 178650 194050 193950 179550 183250 ...
+##  $ Latitude                              : num [1:322375] NA 51.6 51.6 NA NA ...
+##  $ Longitude                             : num [1:322375] NA -0.0582 -0.1574 NA NA ...
+##  $ FRS                                   : chr [1:322375] "London" "London" "London" "London" ...
+##  $ IncidentStationGround                 : chr [1:322375] "Lambeth" "Edmonton" "Barnet" "Kensington" ...
+##  $ FirstPumpArriving_AttendanceTime      : num [1:322375] NA 357 318 210 329 422 180 335 369 268 ...
+##  $ FirstPumpArriving_DeployedFromStation : chr [1:322375] NA "Edmonton" "Southgate" "Kensington" ...
+##  $ SecondPumpArriving_AttendanceTime     : num [1:322375] NA NA NA NA NA 520 NA NA 486 NA ...
+##  $ SecondPumpArriving_DeployedFromStation: chr [1:322375] NA NA NA NA ...
+##  $ NumStationsWithPumpsAttending         : num [1:322375] 1 1 1 1 1 2 1 1 2 1 ...
+##  $ NumPumpsAttending                     : num [1:322375] 1 1 1 1 1 2 1 1 2 1 ...
+##  $ PumpCount                             : num [1:322375] 1 1 1 1 1 2 1 1 4 1 ...
+##  $ PumpHoursRoundUp                      : num [1:322375] 1 1 1 1 1 3 1 1 4 1 ...
+##  $ Notional Cost (£)                     : num [1:322375] 333 333 333 333 333 ...
+##  $ NumCalls                              : num [1:322375] 2 1 1 1 1 3 1 1 5 1 ...
+##  - attr(*, "spec")=
+##   .. cols(
+##   ..   IncidentNumber = col_character(),
+##   ..   DateOfCall = col_character(),
+##   ..   CalYear = col_double(),
+##   ..   TimeOfCall = col_time(format = ""),
+##   ..   HourOfCall = col_double(),
+##   ..   IncidentGroup = col_character(),
+##   ..   StopCodeDescription = col_character(),
+##   ..   SpecialServiceType = col_character(),
+##   ..   PropertyCategory = col_character(),
+##   ..   PropertyType = col_character(),
+##   ..   AddressQualifier = col_character(),
+##   ..   Postcode_full = col_character(),
+##   ..   Postcode_district = col_character(),
+##   ..   UPRN = col_double(),
+##   ..   USRN = col_double(),
+##   ..   IncGeo_BoroughCode = col_character(),
+##   ..   IncGeo_BoroughName = col_character(),
+##   ..   ProperCase = col_character(),
+##   ..   IncGeo_WardCode = col_character(),
+##   ..   IncGeo_WardName = col_character(),
+##   ..   IncGeo_WardNameNew = col_character(),
+##   ..   Easting_m = col_double(),
+##   ..   Northing_m = col_double(),
+##   ..   Easting_rounded = col_double(),
+##   ..   Northing_rounded = col_double(),
+##   ..   Latitude = col_double(),
+##   ..   Longitude = col_double(),
+##   ..   FRS = col_character(),
+##   ..   IncidentStationGround = col_character(),
+##   ..   FirstPumpArriving_AttendanceTime = col_double(),
+##   ..   FirstPumpArriving_DeployedFromStation = col_character(),
+##   ..   SecondPumpArriving_AttendanceTime = col_double(),
+##   ..   SecondPumpArriving_DeployedFromStation = col_character(),
+##   ..   NumStationsWithPumpsAttending = col_double(),
+##   ..   NumPumpsAttending = col_double(),
+##   ..   PumpCount = col_double(),
+##   ..   PumpHoursRoundUp = col_double(),
+##   ..   `Notional Cost (£)` = col_double(),
+##   ..   NumCalls = col_double()
+##   .. )
+##  - attr(*, "problems")=<externalptr>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Check Data Summary}
+\FunctionTok{summary}\NormalTok{(fire\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  IncidentNumber      DateOfCall           CalYear      TimeOfCall         HourOfCall   
+##  Length:322375      Length:322375      Min.   :2019   Length:322375     Min.   : 0.00  
+##  Class :character   Class :character   1st Qu.:2019   Class1:hms        1st Qu.: 9.00  
+##  Mode  :character   Mode  :character   Median :2020   Class2:difftime   Median :14.00  
+##                                        Mean   :2020   Mode  :numeric    Mean   :13.42  
+##                                        3rd Qu.:2021                     3rd Qu.:19.00  
+##                                        Max.   :2022                     Max.   :23.00  
+##                                                                                        
+##  IncidentGroup      StopCodeDescription SpecialServiceType PropertyCategory   PropertyType      
+##  Length:322375      Length:322375       Length:322375      Length:322375      Length:322375     
+##  Class :character   Class :character    Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character    Mode  :character   Mode  :character   Mode  :character  
+##                                                                                                 
+##                                                                                                 
+##                                                                                                 
+##                                                                                                 
+##  AddressQualifier   Postcode_full      Postcode_district       UPRN                USRN         
+##  Length:322375      Length:322375      Length:322375      Min.   :0.000e+00   Min.   : 4200740  
+##  Class :character   Class :character   Class :character   1st Qu.:0.000e+00   1st Qu.:20400989  
+##  Mode  :character   Mode  :character   Mode  :character   Median :0.000e+00   Median :21201121  
+##                                                           Mean   :2.072e+10   Mean   :20400837  
+##                                                           3rd Qu.:1.001e+10   3rd Qu.:22100813  
+##                                                           Max.   :2.000e+11   Max.   :99990422  
+##                                                                                                 
+##  IncGeo_BoroughCode IncGeo_BoroughName  ProperCase        IncGeo_WardCode    IncGeo_WardName   
+##  Length:322375      Length:322375      Length:322375      Length:322375      Length:322375     
+##  Class :character   Class :character   Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+##                                                                                                
+##                                                                                                
+##                                                                                                
+##                                                                                                
+##  IncGeo_WardNameNew   Easting_m        Northing_m     Easting_rounded  Northing_rounded
+##  Length:322375      Min.   :503582   Min.   :155998   Min.   :503550   Min.   :155950  
+##  Class :character   1st Qu.:524924   1st Qu.:175804   1st Qu.:525150   1st Qu.:176050  
+##  Mode  :character   Median :530858   Median :180978   Median :530950   Median :181050  
+##                     Mean   :530634   Mean   :180340   Mean   :530667   Mean   :180487  
+##                     3rd Qu.:537035   3rd Qu.:185076   3rd Qu.:536350   3rd Qu.:185250  
+##                     Max.   :560461   Max.   :200885   Max.   :611150   Max.   :302450  
+##                     NA's   :175667   NA's   :175667                                    
+##     Latitude        Longitude          FRS            IncidentStationGround
+##  Min.   : 0.00    Min.   :-0.51    Length:322375      Length:322375        
+##  1st Qu.:51.47    1st Qu.:-0.20    Class :character   Class :character     
+##  Median :51.51    Median :-0.12    Mode  :character   Mode  :character     
+##  Mean   :51.36    Mean   :-0.12                                            
+##  3rd Qu.:51.55    3rd Qu.:-0.03                                            
+##  Max.   :51.69    Max.   : 0.31                                            
+##  NA's   :175667   NA's   :175667                                           
+##  FirstPumpArriving_AttendanceTime FirstPumpArriving_DeployedFromStation
+##  Min.   :   1.0                   Length:322375                        
+##  1st Qu.: 227.0                   Class :character                     
+##  Median : 290.5                   Mode  :character                     
+##  Mean   : 308.1                                                        
+##  3rd Qu.: 367.0                                                        
+##  Max.   :1199.0                                                        
+##  NA's   :19019                                                         
+##  SecondPumpArriving_AttendanceTime SecondPumpArriving_DeployedFromStation
+##  Min.   :   1.0                    Length:322375                         
+##  1st Qu.: 293.0                    Class :character                      
+##  Median : 363.0                    Mode  :character                      
+##  Mean   : 385.6                                                          
+##  3rd Qu.: 450.0                                                          
+##  Max.   :1200.0                                                          
+##  NA's   :199385                                                          
+##  NumStationsWithPumpsAttending NumPumpsAttending   PumpCount       PumpHoursRoundUp 
+##  Min.   : 1.0                  Min.   : 1.000    Min.   :  1.000   Min.   :   1.00  
+##  1st Qu.: 1.0                  1st Qu.: 1.000    1st Qu.:  1.000   1st Qu.:   1.00  
+##  Median : 1.0                  Median : 1.000    Median :  1.000   Median :   1.00  
+##  Mean   : 1.4                  Mean   : 1.571    Mean   :  1.619   Mean   :   1.37  
+##  3rd Qu.: 2.0                  3rd Qu.: 2.000    3rd Qu.:  2.000   3rd Qu.:   1.00  
+##  Max.   :14.0                  Max.   :14.000    Max.   :250.000   Max.   :1203.00  
+##  NA's   :3823                  NA's   :3823      NA's   :2008      NA's   :2111     
+##  Notional Cost (£)     NumCalls      
+##  Min.   :   333.0   Min.   :  1.000  
+##  1st Qu.:   339.0   1st Qu.:  1.000  
+##  Median :   346.0   Median :  1.000  
+##  Mean   :   471.9   Mean   :  1.306  
+##  3rd Qu.:   352.0   3rd Qu.:  1.000  
+##  Max.   :407817.0   Max.   :175.000  
+##  NA's   :2111       NA's   :4
+\end{verbatim}
+
+\hypertarget{cost-responding-to-fires-and-false-alarms}{%
+\subsection{1. Cost Responding to Fires and False
+Alarms}\label{cost-responding-to-fires-and-false-alarms}}
+
+The sum and average of all costs associated with responding to fires and
+false alarms during the time period.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(fire\_data}\SpecialCharTok{$}\StringTok{\textasciigrave{}}\AttributeTok{Notional Cost (£)}\StringTok{\textasciigrave{}}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2111
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#There are only 2111 out of 322375 entries that contains NA for the Notional Costs variable. Hence, it would not effect the average value significantly if we omit NA. (Do not need to fill NA)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{summary\_cost }\OtherTok{\textless{}{-}}\NormalTok{ fire\_data }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{group\_by}\NormalTok{(IncidentGroup) }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{    dplyr}\SpecialCharTok{::}\FunctionTok{summarise}\NormalTok{(}
+        \AttributeTok{count\_incident=}\FunctionTok{n}\NormalTok{(),}
+        \AttributeTok{sum\_all\_cost =} \FunctionTok{sum}\NormalTok{(}\StringTok{\textasciigrave{}}\AttributeTok{Notional Cost (£)}\StringTok{\textasciigrave{}}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }
+        \AttributeTok{average\_all\_cost =}\NormalTok{ sum\_all\_cost}\SpecialCharTok{/}\NormalTok{count\_incident)}
+
+\NormalTok{summary\_cost}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 4
+##   IncidentGroup   count_incident sum_all_cost average_all_cost
+##   <chr>                    <int>        <dbl>            <dbl>
+## 1 False Alarm             162299     61249812             377.
+## 2 Fire                     51443     43059576             837.
+## 3 Special Service         108633     46812402             431.
+\end{verbatim}
+
+\hypertarget{the-distribution-of-response-times}{%
+\subsection{2. The distribution of response
+times}\label{the-distribution-of-response-times}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(fire\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{FirstPumpArriving\_AttendanceTime)) }\SpecialCharTok{+} 
+    \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth=}\DecValTok{5}\NormalTok{) }\SpecialCharTok{+} 
+    \FunctionTok{xlim}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1200}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"Response time (s)"}\NormalTok{, }
+         \AttributeTok{y=}\StringTok{"Frequency"}\NormalTok{, }
+         \AttributeTok{subtitle=}\StringTok{"Figure 1: Response Time for First Fire Engine to Arrive from Fire Station"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 19019 rows containing non-finite values (stat_bin).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 2 rows containing missing values (geom_bar).
+\end{verbatim}
+
+\includegraphics{London-Fire-Hypothesis-Tests_files/figure-latex/Plot First Attandance Time-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#ggsave("figure1.png")}
+
+\CommentTok{\#Response times of all incidents}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{type\_time }\OtherTok{\textless{}{-}}\NormalTok{ fire\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(}\StringTok{"IncidentGroup"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{type\_mean=}\FunctionTok{mean}\NormalTok{(FirstPumpArriving\_AttendanceTime))}
+
+\FunctionTok{ggplot}\NormalTok{(fire\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{FirstPumpArriving\_AttendanceTime, }\AttributeTok{fill=}\NormalTok{IncidentGroup, }\AttributeTok{alpha=}\FloatTok{0.5}\NormalTok{)) }\SpecialCharTok{+} 
+    \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth=}\DecValTok{5}\NormalTok{) }\SpecialCharTok{+} 
+    \FunctionTok{facet\_grid}\NormalTok{(IncidentGroup}\SpecialCharTok{\textasciitilde{}}\NormalTok{.)}\SpecialCharTok{+} 
+    \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{data=}\NormalTok{type\_time, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept=}\NormalTok{type\_mean), }\AttributeTok{linetype=}\DecValTok{2}\NormalTok{, }\AttributeTok{colour=}\StringTok{\textquotesingle{}black\textquotesingle{}}\NormalTok{, }\AttributeTok{size=}\FloatTok{0.4}\NormalTok{) }\SpecialCharTok{+} 
+    \FunctionTok{xlim}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1000}\NormalTok{) }\SpecialCharTok{+} 
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"Response time (s)"}\NormalTok{, }
+         \AttributeTok{y=}\StringTok{"Frequency"}\NormalTok{,}
+         \AttributeTok{subtitle=}\StringTok{"Figure 2: Response Time for First Fire Engine to Arrive from Fire Station Group by Incident Type"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 19737 rows containing non-finite values (stat_bin).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 6 rows containing missing values (geom_bar).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 3 rows containing missing values (geom_vline).
+\end{verbatim}
+
+\includegraphics{London-Fire-Hypothesis-Tests_files/figure-latex/Plot Dist by Groups-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#ggsave("figure2.png")}
+
+\CommentTok{\#Figure 2 shows the response times of the three different types of incident (“Fire”, “False Alarm” and “Special Service”) where there was indeed a response.}
+
+\CommentTok{\#For the easier comparison of the distribution of data.}
+
+\CommentTok{\#All group\textquotesingle{}s outliers are within the same range which is about \textgreater{} 900.}
+
+\CommentTok{\#I will be working with outliers in the next chunk to increase the accuracy in further calculations with First Pimp Response time.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Omit Outliers}
+\NormalTok{fire\_data }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(fire\_data, FirstPumpArriving\_AttendanceTime }\SpecialCharTok{\textless{}} \DecValTok{900}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{summary-of-special-service-response-times}{%
+\subsection{3. Summary of Special Service Response
+Times}\label{summary-of-special-service-response-times}}
+
+Summary of counts and mean of each type of incident and 10th and 90th
+percentile of response times for each types of incident in `Special
+Service' Incident Group.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{special\_type }\OtherTok{\textless{}{-}}\NormalTok{ fire\_data }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(IncidentGroup }\SpecialCharTok{==} \StringTok{\textquotesingle{}Special Service\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(SpecialServiceType) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{drop\_na}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{summarise}\NormalTok{(}\AttributeTok{count=}\FunctionTok{n}\NormalTok{(), }\AttributeTok{tenth\_percentiles=}\FunctionTok{quantile}\NormalTok{(FirstPumpArriving\_AttendanceTime, }\AttributeTok{probs =} \FloatTok{0.1}\NormalTok{, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{), }\AttributeTok{mean\_response\_time=}\FunctionTok{mean}\NormalTok{(FirstPumpArriving\_AttendanceTime, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{), }\AttributeTok{ninetieth\_percentiles=}\FunctionTok{quantile}\NormalTok{(FirstPumpArriving\_AttendanceTime, }\AttributeTok{probs =} \FloatTok{0.9}\NormalTok{, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{))}
+
+\NormalTok{special\_type}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 19 x 5
+##    SpecialServiceType              count tenth_percentiles mean_response_time ninetieth_percentiles
+##    <chr>                           <int>             <dbl>              <dbl>                 <dbl>
+##  1 Advice Only                        42             193.                313.                  430.
+##  2 Animal assistance incidents        15              90.2               311.                  469.
+##  3 Assist other agencies             224             178.                310.                  475.
+##  4 Effecting entry/exit               43             111.                293.                  449 
+##  5 Evacuation (no fire)               23             147.                351.                  600 
+##  6 Flooding                           83             129.                314.                  648.
+##  7 Hazardous Materials incident      367             185.                297.                  427.
+##  8 Lift Release                        9              80.2               193.                  280 
+##  9 Making Safe (not RTC)             111             152                 279.                  422 
+## 10 Medical Incident                  121              40                 260.                  402 
+## 11 No action (not false alarm)       494             188                 323.                  474 
+## 12 Other rescue/release of persons   169             180.                305.                  452.
+## 13 Other Transport incident          242             156                 294.                  452 
+## 14 Removal of objects from people     54             177.                304.                  419 
+## 15 Rescue or evacuation from water   133             175.                306.                  442.
+## 16 RTC                              5180             177                 316.                  480 
+## 17 Spills and Leaks (not RTC)         77             176.                334.                  475.
+## 18 Stand By                           64             160.                290.                  433.
+## 19 Suicide/attempts                  181             145                 283.                  430
+\end{verbatim}
+
+\hypertarget{a-t-test-comparing-ealing-and-greenwich}{%
+\subsection{4. A t-test comparing Ealing and
+Greenwich}\label{a-t-test-comparing-ealing-and-greenwich}}
+
+New dataframe that contains only Ealing and Greenwich for use in our
+test
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Create new sub dataframe}
+\NormalTok{eg\_fire }\OtherTok{\textless{}{-}}\NormalTok{ fire\_data[fire\_data}\SpecialCharTok{$}\NormalTok{IncGeo\_BoroughName }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}EALING\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}GREENWICH\textquotesingle{}}\NormalTok{),]}
+
+\CommentTok{\#Summary of all records that is Ealing and Greenwich}
+\NormalTok{eg\_fire\_summary }\OtherTok{\textless{}{-}}\NormalTok{ eg\_fire }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(IncGeo\_BoroughName) }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{summarise}\NormalTok{(}\AttributeTok{count=}\FunctionTok{n}\NormalTok{() , }\AttributeTok{mean\_time=}\FunctionTok{mean}\NormalTok{(FirstPumpArriving\_AttendanceTime, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{), }\AttributeTok{sd\_time=}\FunctionTok{sd}\NormalTok{(FirstPumpArriving\_AttendanceTime, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{))}
+
+\NormalTok{eg\_fire\_summary}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 4
+##   IncGeo_BoroughName count mean_time sd_time
+##   <chr>              <int>     <dbl>   <dbl>
+## 1 EALING             10266      313.    128.
+## 2 GREENWICH           9081      308.    124.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Since the outliers are already dealt with in the entire data set, there are no outstanding outliers for incident cases in Ealing and Greenwich. The data is ready for examine and test.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#The distribution of the response time for incidents at Ealing and Greenwich station. We are interested in whether the two means values are equal.}
+
+\FunctionTok{ggplot}\NormalTok{(eg\_fire, }\FunctionTok{aes}\NormalTok{(FirstPumpArriving\_AttendanceTime,..density.., }\AttributeTok{fill=}\NormalTok{IncGeo\_BoroughName)) }\SpecialCharTok{+} \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth=}\DecValTok{10}\NormalTok{, }\AttributeTok{position=}\StringTok{"identity"}\NormalTok{, }\AttributeTok{alpha=}\FloatTok{0.5}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{data=}\NormalTok{eg\_fire\_summary, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{xintercept=}\NormalTok{mean\_time), }\AttributeTok{linetype=}\DecValTok{2}\NormalTok{, }\AttributeTok{size=}\FloatTok{0.4}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"Response Time (s)"}\NormalTok{, }\AttributeTok{y=}\StringTok{"Density"}\NormalTok{, }\AttributeTok{fill=}\StringTok{"Borough Name"}\NormalTok{, }\AttributeTok{subtitle=}\StringTok{"Figure 3: Ealing and Greenwich Incident Response Time Distribution Comparison"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{London-Fire-Hypothesis-Tests_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#ggsave("figure5.png")}
+
+\CommentTok{\#Similar mean value, but not clear.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#2{-}sample t{-}test}
+
+\FunctionTok{t.test}\NormalTok{(FirstPumpArriving\_AttendanceTime}\SpecialCharTok{\textasciitilde{}}\NormalTok{IncGeo\_BoroughName, eg\_fire)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Welch Two Sample t-test
+## 
+## data:  FirstPumpArriving_AttendanceTime by IncGeo_BoroughName
+## t = 2.7436, df = 19184, p-value = 0.006083
+## alternative hypothesis: true difference in means between group EALING and group GREENWICH is not equal to 0
+## 95 percent confidence interval:
+##  1.420052 8.525386
+## sample estimates:
+##    mean in group EALING mean in group GREENWICH 
+##                313.0116                308.0389
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#t(19184)=2.7436, p{-}value \textless{} 0.006}
+\end{Highlighting}
+\end{Shaded}
+
+Estimation Approach
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Estimation}
+
+\NormalTok{time\_es }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(FirstPumpArriving\_AttendanceTime}\SpecialCharTok{\textasciitilde{}}\NormalTok{IncGeo\_BoroughName, }\AttributeTok{data=}\NormalTok{eg\_fire)}
+\NormalTok{(  time\_es\_emm }\OtherTok{\textless{}{-}} \FunctionTok{emmeans}\NormalTok{(time\_es, }\SpecialCharTok{\textasciitilde{}}\NormalTok{IncGeo\_BoroughName)  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  IncGeo_BoroughName emmean   SE    df lower.CL upper.CL
+##  EALING                313 1.24 19345      311      315
+##  GREENWICH             308 1.32 19345      305      311
+## 
+## Confidence level used: 0.95
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(  time\_es\_contrast }\OtherTok{\textless{}{-}} \FunctionTok{confint}\NormalTok{(}\FunctionTok{pairs}\NormalTok{(time\_es\_emm))  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  contrast           estimate   SE    df lower.CL upper.CL
+##  EALING - GREENWICH     4.97 1.82 19345     1.41     8.53
+## 
+## Confidence level used: 0.95
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#the mean in response time in Ealing is 313 seconds 95\% CI [311{-}{-}315]. The mean response time in Greenwich is 308 seconds 95\% CI [305{-}{-}311]. The difference in response time is 4.97 seconds 95\% CI [1.41{-}{-}8.53] higher at Ealing compared to Greenwich.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{grid.arrange}\NormalTok{(}
+\NormalTok{    em }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{summary}\NormalTok{(time\_es\_emm), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{IncGeo\_BoroughName, }\AttributeTok{y=}\NormalTok{emmean, }\AttributeTok{ymin=}\NormalTok{lower.CL, }\AttributeTok{ymax=}\NormalTok{upper.CL)) }\SpecialCharTok{+} 
+        \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+        \FunctionTok{geom\_linerange}\NormalTok{() }\SpecialCharTok{+} 
+        \FunctionTok{labs}\NormalTok{(}\AttributeTok{y=}\StringTok{"Response Time (s)"}\NormalTok{, }\AttributeTok{x=}\StringTok{"Incident Borough Name"}\NormalTok{, }\AttributeTok{subtitle=}\StringTok{"Error bars are 95\% CIs"}\NormalTok{, }\AttributeTok{title=}\StringTok{"The Response Time (s)"}\NormalTok{), }
+    
+\NormalTok{    cont }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(time\_es\_contrast, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{contrast, }\AttributeTok{y=}\NormalTok{estimate, }\AttributeTok{ymin=}\NormalTok{lower.CL, }\AttributeTok{ymax=}\NormalTok{upper.CL)) }\SpecialCharTok{+} 
+        \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+        \FunctionTok{geom\_linerange}\NormalTok{() }\SpecialCharTok{+} 
+        \FunctionTok{labs}\NormalTok{(}\AttributeTok{y=}\StringTok{"Difference in Response Time (s)"}\NormalTok{, }\AttributeTok{x=}\StringTok{"Contrast"}\NormalTok{, }\AttributeTok{subtitle=}\StringTok{"Error bars are 95\% CIs"}\NormalTok{, }\AttributeTok{title=}\StringTok{"Difference in Response Time (s)"}\NormalTok{) }\SpecialCharTok{+}
+        \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept=}\DecValTok{0}\NormalTok{, }\AttributeTok{lty=}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{ncol=}\DecValTok{2}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{London-Fire-Hypothesis-Tests_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#fig6 \textless{}{-} arrangeGrob(em, cont, ncol=2)}
+\CommentTok{\#ggsave("figure6.png", fig6)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{section-2}{%
+\section{Section 2}\label{section-2}}
+
+This report illustrates the analyses of associated costs and responding
+time to fire incidents. The purpose of this is to present insights
+requested by Fire service managers and local politicians. Data analysed
+is obtained from the Fire service, containing essential information such
+as estimated cost of the incident response, the attendance time for the
+first fire engine to arrive from fire station, the location of the
+incident, and the type of incidents i.e.~Fire, False Alarm, or Special
+Services.
+
+There are 322,375 data records. Only 2,111 cost data entries are
+missing. I decided to omit those entries with missing records of costs,
+when analysing the estimated costs for the incident response, because it
+would not have a significant effect on the calculations (Table 1). As a
+result, data showed that the aggregated costs associated with responding
+to Fire incidents is £42,569,636, but £60,742,034 for False Alarm
+incidents. Though the sum of all cost for Fire incident is lower than
+those of False Alarm incidents, the average incident response cost for
+Fire incident is the higher at £841.18, while the False Alarm response
+cost is £378.34. This is because there are more than doubled counts of
+False Alarm incidents than Fire.
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-6}Table 1. Summary of Estimated Costs for Incident Response}
+\centering
+\begin{tabular}[t]{l|r|r|r}
+\hline
+IncidentGroup & count\_incident & sum\_all\_cost & average\_all\_cost\\
+\hline
+False Alarm & 162299 & 61249812 & 377.3887\\
+\hline
+Fire & 51443 & 43059576 & 837.0347\\
+\hline
+Special Service & 108633 & 46812402 & 430.9225\\
+\hline
+\end{tabular}
+\end{table}
+
+Regarding response times, records of incidents where there was indeed a
+response are plotted in Figure 1 below. However, for more insights of
+each incident groups distribution that make up the whole response time
+distribution, Figure 2 is plotted. All the Three groups have a similar
+distribution of response time with a slight positive-skewed. This
+indicates that most incidents have a relatively quicker response times.
+We can, also, observe that the mode and mean values for all the three
+separated incidents are at similar range of response time, which is
+around 250 to 275 seconds. Though, Special Service seems to have an
+unusual cluster in response time 0 to around 30 seconds.
+
+\includegraphics{figure1.png} \includegraphics{figure2.png}
+
+Moreover, from these two plots we can clearly see that there are
+outliers or odd records in all three incident group's response time. All
+group's odd events are within the same time range which is about 800
+seconds or greater. Therefore, records with these odd events are dropped
+to ensure the highest level of accuracy is obtained in further
+calculations with response time data.
+
+After examining the summary statistics for the response time for Special
+Service incidents (Table 2), it could be concluded that most of the
+Special Service Incidents have similar average response time values. In
+addition, the response time for the low 10\% of incidents in each groups
+are in a similar range, this also applies for the high 90\% of incident
+groups. However, there is one noticeable group, the Medical Incident,
+where the average response time is relatively lower than other groups at
+193.1 seconds. Similarly, the response time for the low 10\% of the
+whole Medical Incident is extremely fast at 40.0 seconds compared to
+other types at around 160 to 180 seconds.
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-7}Table 2. Summary of Special Service Incidents Response Time}
+\centering
+\begin{tabular}[t]{l|r|r|r|r}
+\hline
+SpecialServiceType & count & tenth\_percentiles & mean\_response\_time & ninetieth\_percentiles\\
+\hline
+Advice Only & 42 & 192.6 & 312.9286 & 429.9\\
+\hline
+Animal assistance incidents & 15 & 90.2 & 311.0667 & 468.8\\
+\hline
+Assist other agencies & 224 & 177.9 & 309.6741 & 474.5\\
+\hline
+Effecting entry/exit & 43 & 111.4 & 293.1628 & 449.0\\
+\hline
+Evacuation (no fire) & 23 & 147.2 & 350.9130 & 600.0\\
+\hline
+Flooding & 83 & 129.4 & 313.8434 & 648.4\\
+\hline
+Hazardous Materials incident & 367 & 185.2 & 296.5313 & 427.4\\
+\hline
+Lift Release & 9 & 80.2 & 193.1111 & 280.0\\
+\hline
+Making Safe (not RTC) & 111 & 152.0 & 278.9099 & 422.0\\
+\hline
+Medical Incident & 121 & 40.0 & 259.9008 & 402.0\\
+\hline
+No action (not false alarm) & 494 & 188.0 & 322.5344 & 474.0\\
+\hline
+Other rescue/release of persons & 169 & 179.6 & 305.4615 & 452.4\\
+\hline
+Other Transport incident & 242 & 156.0 & 293.8595 & 452.0\\
+\hline
+Removal of objects from people & 54 & 177.3 & 304.0185 & 419.0\\
+\hline
+Rescue or evacuation from water & 133 & 175.2 & 306.2857 & 441.6\\
+\hline
+RTC & 5180 & 177.0 & 315.9749 & 480.0\\
+\hline
+Spills and Leaks (not RTC) & 77 & 175.8 & 333.7143 & 474.6\\
+\hline
+Stand By & 64 & 159.8 & 290.3281 & 432.7\\
+\hline
+Suicide/attempts & 181 & 145.0 & 282.5580 & 430.0\\
+\hline
+\end{tabular}
+\end{table}
+
+In this part, I will explore the response time in the area of Ealing and
+Greenwich. t-test was utilised to test whether the average response time
+for incidents in Ealing and Greenwich is the same or not. Since the
+outliers for response times are already dealt with, there are no
+outstanding odd events for incident cases in Ealing and Greenwich that
+would manipulate the results. Table 3 shows the counts, average response
+time and show how spread out incidents' response time are from the
+average response time.
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-8}Table 3. Summary of Incidents Response Time in Ealing and Greenwich}
+\centering
+\begin{tabular}[t]{l|r|r|r}
+\hline
+IncGeo\_BoroughName & count & mean\_time & sd\_time\\
+\hline
+EALING & 10266 & 313.0116 & 127.8804\\
+\hline
+GREENWICH & 9081 & 308.0389 & 123.9633\\
+\hline
+\end{tabular}
+\end{table}
+
+According to Figure 3, there are some overlaps between the two
+distribution. However, it is not clear whether the two means are really
+equal in all situations. We need to do the test to have a clearer
+picture.
+
+\begin{figure}
+\centering
+\includegraphics{figure5.png}
+\caption{``fig3''}
+\end{figure}
+
+Welch Two Sample t-test assessed whether the difference between the two
+means are equals to zero or not. This type of test is utilised because
+the two groups i.e.~incidents in Ealing and incident in Greenwich is
+independent of each other.
+
+The test evident at \(t(19184)=2.7436\), \(p-value < 0.006\) that the
+mean in response time for Ealing is 313.01 seconds, while the mean in
+response time for Greenwich is 308.04 seconds. This suggests that the
+difference between the two area's mean response time is significantly
+different from zero.
+
+The t-test result was assessed with caution because, as stated prior,
+the incidents response time are skewed. The non-symmetrical nature of
+the data may create biases in our test result. To enhance the
+understanding and the comparison of the mean response time in these two
+areas, Estimation approach was utilised.
+
+Results from the estimation approach demonstrated that the mean in
+response time in Ealing is 313 seconds with 95\% confidence interval
+(311 to 315 seconds). The mean response time in Greenwich is 308 seconds
+95\% confidence interval (305 to 311 seconds). The difference in
+response time is 4.97 seconds with 95\% confidence interval (1.41 to
+8.53 seconds) higher at Ealing compared to Greenwich. Hence, with
+supporting evidence from the estimation approach, we may conclude with
+higher accuracy level that Ealing and Greenwich have different average
+incident response time. The visualised summary is shown in Figure 4
+below (based on suggested layout by Cumming (2014)).
+
+\begin{figure}
+\centering
+\includegraphics{figure6.png}
+\caption{``fig6''}
+\end{figure}
+
+Reference: Cumming, G. (2014) `The new statistics: Why and how',
+Psychological Science, 25, pp.~7--29. Available at:
+\url{https://doi.org/10.1177/0956797613504966}.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\end{document}
