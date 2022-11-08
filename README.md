@@ -25,4 +25,5 @@ Sony Merger Project
 <br />
 The project is EDA based. I look into each factors that this aquisition by Sony of AWAL and KNR affected and see if there are a problem with this anticpmpetitive act in the Music Industry UK. Moreover, I calculate the HHI and CRK to see analyse the market concentration. All the data are collected and scraped by me with the help of my group member (for the Industrial Economics III group coursework).
 <br />
+<br />
 Thank you for visiting my portfolio.
