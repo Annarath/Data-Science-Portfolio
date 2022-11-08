@@ -1,11 +1,14 @@
 # Data-Science-Portfolio
 <br />
+<br />
 I am Annarath Photipakraksa.
 <br />
 <br />
 This repository is my portfolio, storing Data Science Projects
 <br />
+<br />
 I self-taught data science via online courses and projects for hands-on practices. I am a final year Industrial Economics undergraduate student who is interested in Data Science. I am aiming to pursue my further studies and careers in Data Science field. I may not be the best at programming and data science as I just started my Data science journey for about a year alongsides my university work, but I am confident that I am an ambitious person as "do everthing the best I can" is my personal all-time life quote.
+<br />
 <br />
 Projects are in Python language and is in both VSCode and Jupyter Notebook format.
 <br />
