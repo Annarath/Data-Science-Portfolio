@@ -1,0 +1,734 @@
+---
+title: "Lending_Club_Cluster_Analysis"
+author: "Group 15"
+date: "2023-02-25"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 3
+---
+
+# Set up
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Import Library
+```{r import libraries}
+#install.packages('factoextra')
+#install.packages('psych')
+#install.packages('psychTools')
+#install.packages('readxl')
+library(factoextra)
+library(cluster)
+library(dplyr)
+library(psych)
+library(psychTools)
+library(readxl)
+library(ggplot2)
+library(tidyverse)
+library(GPArotation)
+```
+
+# Load data
+```{r load data}
+loan1 <- read_excel("loan_data_ADA_assignment.xlsx")
+#Drop Categorical data (that is not ordinal)
+rm <- c('member_id','emp_title','issue_d','title','zip_code','addr_state', 'earliest_cr_line','mths_since_last_delinq','mths_since_last_record', 'last_pymnt_d','next_pymnt_d','last_credit_pull_d','policy_code', 'mths_since_last_major_derog','desc', 'purpose', 'pymnt_plan', 'loan_status', 'home_ownership', 'loan_is_bad', 'term')
+
+loan2 <- loan1 %>% select(-rm)
+```
+
+```{r str and summary}
+str(loan2)
+summary(loan2)
+```
+
+# Data Cleaning
+
+Remove NA
+```{r remove na}
+# Removing rows containing NA values
+loan2 <- na.omit(loan2)
+```
+
+Change to Numeric
+```{r change to numeric}
+# Encoding variables:
+## 1. Grade
+loan2$grade <- factor(loan2$grade, levels = c("A","B","C","D","E","F","G"))
+loan2$grade <- as.numeric(loan2$grade)
+
+## 2. Sub-Grade
+loan2$sub_grade <- factor(loan2$sub_grade, levels = c("A1","A2","A3","A4","A5", "B1","B2","B3","B4","B5", "C1","C2","C3","C4","C5", "D1","D2","D3","D4","D5", "E1","E2","E3","E4","E5", "F1","F2","F3","F4","F5", "G1","G2","G3","G4","G5"))
+loan2$sub_grade <- as.numeric(loan2$sub_grade)
+
+## 3. Verification status is ordinal
+loan2$verification_status <- factor(loan2$verification_status, levels = c("Verified", "Source Verified", "Not Verified"))
+loan2$verification_status <- as.numeric(loan2$verification_status)
+```
+
+Check mean and standard deviation
+```{r describe loan2}
+describe(loan2)
+```
+
+Remove variables that have almost 0 sd and those that median/trimmed/mad are 0 to avoid singular matrix problem
+```{r remove categorical}
+rm_singular_prob <- c('collections_12_mths_ex_med', 'acc_now_delinq', 'total_rec_late_fee', 'delinq_2yrs', 'pub_rec', 'revol_util', 'recoveries', 'tot_coll_amt', 'collection_recovery_fee', 'inq_last_6mths')
+
+loan2 <- loan2 %>% select(-rm_singular_prob)
+```
+
+Remove duplicate columns
+```{r remove duplicate columns}
+#duplicate check
+stats_loan <- loan2 %>% 
+    summarise(l_amnt_not_f_amnt = sum(loan2$loan_amnt != loan2$funded_amnt),
+              f_amnt_not_f_inv = sum(loan2$funded_amnt != loan2$funded_amnt_inv),
+              l_amnt_not_f_inv = sum(loan2$loan_amnt != loan2$funded_amnt_inv))
+
+stats_loan
+#loan_amount and funded_amount are same, hence can drop one
+
+#The difference between loan_amnt and funded_amnt to funded_amnt_inv is very small, hence can be very skewed if not drop
+#loan2[loan2$loan_amnt != loan2$funded_amnt_inv,]
+
+#Drop duplicate variables
+loan2 <- loan2 %>% select(-c(funded_amnt, funded_amnt_inv))
+```
+
+```{r remove duplicate 2 columns}
+#duplicate check
+stats_pay <- loan2 %>% 
+    summarise(l_amnt_not_f_amnt = sum(loan2$total_pymnt != loan2$total_pymnt_inv))
+stats_pay
+
+#The differences are very small, hence can drop one
+loan2 <- loan2 %>% select(-total_pymnt_inv)
+```
+
+Dataset Ready for Modeling
+```{r describe after remove duplicate columns}
+describe(loan2)
+```
+
+# Factor Analysis
+Use factor analysis to help in removing multicollinearity understanding the underlying factors each cluster has, in the interpretation stage
+
+## Check Assumptions
+Check assumptions for Factor Analysis
+
+1. Correlation of variables
+```{r check corr}
+loan_no_id<- select(loan2, !id)
+Corr_Matrix <- lowerCor(loan_no_id)
+#Substantial number of correlations > 0.3
+```
+
+2. Kaiser-Meyer-Olkin (KMO) test
+```{r check KMO}
+KMO(loan_no_id)
+#KMO is 0.72, which is > 0.5 which is desirable to find factors
+```
+
+3.Bartlett significance
+```{r check bartlett}
+cortest.bartlett(loan_no_id)
+#p-value is significant, hence there are correlations between variables
+```
+
+## Creating sample of 500 observations
+```{r create loan2_sample}
+set.seed(456)
+loan2_sample_id <- sample_n(loan2, 500)
+loan2_sample<- loan2_sample_id%>% select(!id)
+summary(loan2_sample)
+```
+
+## Factor Analysis Rotations
+
+### PC Extraction
+Since we will be using the factors for cluster analysis, hence using principal component method which produces uncorrelated components would be desirable in extracting factors (as cluster analysis does not allow for multicollinearity).
+
+#### Oblique rotation
+1.Promax
+```{r promax 18}
+#18 factors
+#fa_obli18_p <- principal(loan2_sample, 18, rotate="promax")
+#print.psych(fa_obli18_p, cut=0.3, sort=TRUE)
+#plot(fa_obli18_p$values, type = "b")
+#could check from 4 PCs to 6 PCs as the eigenvalues are >1 and it explains more than 60% of the old variables
+#The Scree plot, suggested 5 or 10 PCs
+```
+```{r promax 4}
+#4 factors
+#fa_obli4_p <- principal(loan2_sample, 4, rotate="promax")
+#print.psych(fa_obli4_p, cut=0.3, sort=TRUE)
+```
+```{r promax 5}
+#5 factors
+#fa_obli5_p <- principal(loan2_sample, 5, rotate="promax")
+#print.psych(fa_obli5_p, cut=0.3, sort=TRUE)
+```
+```{r promax 6}
+#6 factors
+#fa_obli6_p <- principal(loan2_sample, 6, rotate="promax")
+#print.psych(fa_obli6_p, cut=0.3, sort=TRUE)
+```
+
+2.Oblimin
+```{r oblimin 18}
+#18 factors
+#fa_obli18_o <- principal(loan2_sample, 18, rotate="oblimin")
+#print.psych(fa_obli18_o, cut=0.3, sort=TRUE)
+#plot(fa_obli18_o$values, type = "b")
+#could check from 6 PCs to 9 PCs as the eigenvalues are >1 and it explains about 60% of the old variables
+#The Scree plot, suggested 5 or 10 PCs
+```
+```{r oblimin 7}
+#7 factors
+#fa_obli7_o <- principal(loan2_sample, 7, rotate="oblimin")
+#print.psych(fa_obli7_o, cut=0.3, sort=TRUE)
+```
+```{r oblimin 8}
+#8 factors
+#fa_obli8_o <- principal(loan2_sample, 8, rotate="oblimin")
+#print.psych(fa_obli8_o, cut=0.3, sort=TRUE)
+```
+```{r oblimin 9}
+#9 factors
+#fa_obli9_o <- principal(loan2_sample, 9, rotate="oblimin")
+#print.psych(fa_obli9_o, cut=0.3, sort=TRUE)
+#Gives least cross loadings but produces high correlations
+```
+
+#### Orthogonal rotation
+1.Quartimax
+```{r Quartimax 18}
+#18 factors
+fa_orth18_q <- principal(loan2_sample, 18, rotate="quartimax")
+print.psych(fa_orth18_q, cut=0.3, sort=TRUE)
+plot(fa_orth18_q$values, type = "b")
+#could check from 3 PCs to 6 PCs as the eigenvalues are >1 and it explains more than 60% of the old variables
+#The Scree plot, suggested 5 PCs
+```
+```{r Quartimax 3}
+#3 factors
+#fa_orth3_q <- principal(loan2_sample, 3, rotate="quartimax")
+#print.psych(fa_orth3_q, cut=0.3, sort=TRUE)
+```
+```{r Quartimax 4}
+#4 factors
+#fa_orth4_q <- principal(loan2_sample, 4, rotate="quartimax")
+#print.psych(fa_orth4_q, cut=0.3, sort=TRUE)
+```
+```{r Quartimax 5}
+#5 factors
+fa_orth5_q <- principal(loan2_sample, 5, rotate="quartimax")
+print.psych(fa_orth5_q, cut=0.3, sort=TRUE)
+#fa.diagram(fa_orth5_q)
+```
+```{r Quartimax 6}
+#6 factors
+#fa_orth6_q <- principal(loan2_sample, 6, rotate="quartimax")
+#print.psych(fa_orth6_q, cut=0.3, sort=TRUE)
+```
+
+2.Varimax
+```{r Varimax 18}
+#18 factors
+#fa_orth18_v <- principal(loan2_sample, 18, rotate="varimax")
+#print.psych(fa_orth18_v, cut=0.3, sort=TRUE)
+#plot(fa_orth18_v$values, type = "b")
+#could check from 4 PCs to 6 PCs as the eigenvalues are >1 and it explains more than 60% of the old variables
+#The Scree plot, suggested 5 PCs
+```
+```{r Varimax 4}
+#4 factors
+#fa_orth4_v <- principal(loan2_sample, 4, rotate="varimax")
+#print.psych(fa_orth4_v, cut=0.3, sort=TRUE)
+```
+```{r Varimax 5}
+#5 factors
+#fa_orth5_v <- principal(loan2_sample, 5, rotate="varimax")
+#print.psych(fa_orth5_v, cut=0.3, sort=TRUE)
+```
+```{r Varimax 6}
+#6 factors
+#fa_orth6_v <- principal(loan2_sample, 6, rotate="varimax")
+#print.psych(fa_orth6_v, cut=0.3, sort=TRUE)
+```
+
+3.Equamax
+```{r Equamax 18}
+#18 factors
+#fa_orth18_e <- principal(loan2_sample, 18, rotate="equamax")
+#print.psych(fa_orth18_e, cut=0.3, sort=TRUE)
+#plot(fa_orth18_e$values, type = "b")
+#Takes upto 10 PCs to explain 60% of the old variables, hence will not help in explaining clusters as god as previous rotaitons
+#The Scree plot, suggested 5 PCs
+```
+
+### Maximum Likelihood (ML) Extraction
+We tried to use ML extraction with all the rotations too, however, the results from using PC extractions are better for all methods. Thus, we will not be using this extraction for our cluster analysis.
+
+#### No rotation
+```{r}
+#18 factors
+#fa <- (fa(loan2_sample,18,n.obs=500, rotate="none", fm="ml"))
+#print(fa,cut=0.3,sort='true')
+#could check 3 factors as the eigenvalues are >1 and it explains almost 60% of the old variables
+```
+```{r}
+#3 factors
+#fa_3 <- (fa(loan2_sample, 3, n.obs=500, rotate="none", fm="ml"))
+#print(fa_3,cut=0.3,sort='true')
+```
+
+#### Oblimin Rotation
+```{r}
+# 18 Factors
+#fa18o <- (fa(loan2_sample,18, n.obs=500, rotate="oblimin", fm="ml"))
+#print.psych(fa18o, cut=0.3,sort="TRUE")
+#fa.diagram(fa18o)
+#could check 6 factors as the eigenvalues are >1 and it explains almost 60% of the old variables
+```
+```{r}
+# 6 Factors
+#fa6o <- (fa(loan2_sample,6, n.obs=500, rotate="oblimin", fm="ml"))
+#print.psych(fa6o, cut=0.3,sort="TRUE")
+```
+
+#### Orthogonal rotation
+```{r}
+# 18 Factors
+#fa18v <- (fa(loan2_sample,18, n.obs=500, rotate="varimax", fm="ml"))
+#print.psych(fa18v, cut=0.3,sort="TRUE")
+#fa.diagram(fa18v)
+#could check from 4 to 5 factors as the eigenvalues are >1 and it explains almost 60% of the old variables
+```
+```{r}
+# 4 Factors
+#fa4v <- (fa(loan2_sample,4, n.obs=500, rotate="varimax", fm="ml"))
+#print.psych(fa4v, cut=0.3,sort="TRUE")
+```
+```{r}
+# 5 Factors
+#fa5v <- (fa(loan2_sample,5, n.obs=500, rotate="varimax", fm="ml"))
+#print.psych(fa5v, cut=0.3,sort="TRUE")
+```
+
+#### Best Rotation factor scores for loan2_sample
+```{r define loan2_fscores}
+#Though there are few cross loadings, this is the best out of all rotations
+fa_orth5_q <- principal(loan2_sample, 5, rotate="quartimax", scores=TRUE)
+head(fa_orth5_q$scores, 10)
+loan2_fscores <- fa_orth5_q$scores
+#fscores are already in a standardised form, hence do not need to normalise
+```
+
+Describe loan2_fscore
+```{r describe loan2_fscores}
+describe(loan2_fscores)
+```
+
+Check assumptions to see whether our fscores are suitable for cluster analysis
+```{r check corr loan2_fscores}
+FscoresMatrix <- lowerCor(loan2_fscores)
+print(FscoresMatrix)
+#no correlation
+```
+
+### Create non-outliers version to compare results loan3_sample
+
+Create loan3
+```{r create loan3}
+loan3 <- loan_no_id
+loan3_id <- loan2
+```
+
+Calculate Mahalanobis distance to identify potential outliers.
+```{r calculate Mahalanobis and drop outliers}
+#Calculate
+Maha_3 <- mahalanobis(loan3, colMeans(loan3), cov(loan3))
+
+#Checking P-values of Maha Distance (to identify distances that are statistically sigificant)
+MahaPvalue_3 <- pchisq(Maha_3, df=30, lower.tail = FALSE)
+
+#Check number of outliers we have
+print(sum(MahaPvalue_3 < 0.001))
+```
+A p-value that is less than 0.001 is considered to be an outlier. In this case, there are 688 observations with p values less than 0.001. We can consider dropping them for the cluster analysis. 
+
+Identify which one to drop with data and drop outliers
+```{r drop outliers}
+#See which observartion is an outlier
+IntelMaha_3 <- cbind(loan3, Maha_3, MahaPvalue_3)
+loan3 <- filter(IntelMaha_3, MahaPvalue_3 > 0.001)
+
+#Drop Outliers
+loan3 <- loan3 %>% select(-c('Maha_3', 'MahaPvalue_3'))
+```
+
+Create loan3_sample for sample of non-outliers version to compare
+```{r create loan3_sample}
+set.seed(456)
+loan3_sample_id <- sample_n(loan3_id, 500)
+loan3_sample <- loan3_sample_id %>% select(!id)
+
+summary(loan3_sample)
+```
+
+#### Oblique rotation for data without outliers
+1.Promax
+```{r promax 18 3}
+#18 factors
+#fa3_obli18_p <- principal(loan3_sample, 18, rotate="promax")
+#print.psych(fa3_obli18_p, cut=0.3, sort=TRUE)
+#plot(fa3_obli18_p$values, type = "b")
+#could check from 5 PCs to 7 PCs as the eigenvalues are >1 and it explains more than 60% of the old variables
+#The Scree plot, suggested 5 or 10 PCs
+```
+```{r promax 5 3}
+#5 factors
+#fa3_obli5_p <- principal(loan3_sample, 5, rotate="promax")
+#print.psych(fa3_obli5_p, cut=0.3, sort=TRUE)
+```
+```{r promax 6 3}
+#6 factors
+#fa3_obli6_p <- principal(loan3_sample, 6, rotate="promax")
+#print.psych(fa3_obli6_p, cut=0.3, sort=TRUE)
+```
+```{r promax 7 3}
+#7 factors
+#fa3_obli7_p <- principal(loan3_sample, 7, rotate="promax")
+#print.psych(fa3_obli7_p, cut=0.3, sort=TRUE)
+```
+
+2.Oblimin
+```{r oblimin 18 3}
+#18 factors
+#fa3_obli18_o <- principal(loan3_sample, 18, rotate="oblimin")
+#print.psych(fa3_obli18_o, cut=0.3, sort=TRUE)
+#plot(fa3_obli18_o$values, type = "b")
+#could check from 6 PCs to 9 PCs as the eigenvalues are >1 and it explains about 60% of the old variables
+#The Scree plot, suggested 5 or 10 PCs
+```
+```{r oblimin 6 3}
+#6 factors
+#fa3_obli6_o <- principal(loan3_sample, 6, rotate="oblimin")
+#print.psych(fa3_obli6_o, cut=0.3, sort=TRUE)
+```
+```{r oblimin 7 3}
+#7 factors
+#fa3_obli7_o <- principal(loan3_sample, 7, rotate="oblimin")
+#print.psych(fa3_obli7_o, cut=0.3, sort=TRUE)
+```
+```{r oblimin 8 3}
+#8 factors
+#fa3_obli8_o <- principal(loan3_sample, 8, rotate="oblimin")
+#print.psych(fa3_obli8_o, cut=0.3, sort=TRUE)
+```
+```{r oblimin 9 3}
+#9 factors
+#fa3_obli9_o <- principal(loan3_sample, 9, rotate="oblimin")
+#print.psych(fa3_obli9_o, cut=0.3, sort=TRUE)
+#Gives least cross loadings but produces high correlations
+```
+
+#### Orthogonal rotation for data without outliers
+1.Quartimax
+```{r Quartimax 18 3}
+#18 factors
+#fa3_orth18_q <- principal(loan3_sample, 18, rotate="quartimax")
+#print.psych(fa3_orth18_q, cut=0.3, sort=TRUE)
+#plot(fa3_orth18_q$values, type = "b")
+#could check from 4 PCs to 6 PCs as the eigenvalues are >1 and it explains more than 60% of the old variables
+#The Scree plot, suggested 5 PCs
+```
+```{r Quartimax 4 3}
+#4 factors
+#fa3_orth4_q <- principal(loan3_sample, 4, rotate="quartimax")
+#print.psych(fa3_orth4_q, cut=0.3, sort=TRUE)
+```
+```{r Quartimax 5 3}
+#5 factors
+#fa3_orth5_q <- principal(loan3_sample, 5, rotate="quartimax")
+#print.psych(fa3_orth5_q, cut=0.3, sort=TRUE)
+```
+```{r Quartimax 6 3}
+#6 factors
+#fa3_orth6_q <- principal(loan3_sample, 6, rotate="quartimax")
+#print.psych(fa3_orth6_q, cut=0.3, sort=TRUE)
+```
+
+2.Varimax
+```{r Varimax 18 3}
+#18 factors
+fa3_orth18_v <- principal(loan3_sample, 18, rotate="varimax")
+print.psych(fa3_orth18_v, cut=0.3, sort=TRUE)
+plot(fa3_orth18_v$values, type = "b")
+#could check from 4 PCs to 6 PCs as the eigenvalues are >1 and it explains more than 60% of the old variables
+#The Scree plot, suggested 5 PCs
+```
+```{r Varimax 4 3}
+#4 factors
+fa3_orth4_v <- principal(loan3_sample, 4, rotate="varimax")
+print.psych(fa3_orth4_v, cut=0.3, sort=TRUE)
+#Least cross loading
+```
+```{r Varimax 5 3}
+#5 factors
+#fa3_orth5_v <- principal(loan3_sample, 5, rotate="varimax")
+#print.psych(fa3_orth5_v, cut=0.3, sort=TRUE)
+```
+```{r Varimax 6 3}
+#6 factors
+#fa3_orth6_v <- principal(loan3_sample, 6, rotate="varimax")
+#print.psych(fa3_orth6_v, cut=0.3, sort=TRUE)
+```
+
+3.Equamax
+```{r Equamax 18 3}
+#18 factors
+#fa3_orth18_e <- principal(loan3_sample, 18, rotate="equamax")
+#print.psych(fa3_orth18_e, cut=0.3, sort=TRUE)
+#plot(fa3_orth18_e$values, type = "b")
+#Takes upto 10 PCs to explain 60% of the old variables, hence will not help in explaining clusters as god as previous rotaitons
+#The Scree plot, suggested 5 PCs
+```
+
+#### Best Rotation factor scores for loan3_sample
+```{r}
+#Though there are few cross loadings, this is the best out of all rotations
+fa3_orth4_v <- principal(loan3_sample, 4, rotate="varimax", scores=TRUE)
+print.psych(fa3_orth4_v, cut=0.3, sort=TRUE)
+
+loan3_fscores <- fa3_orth4_v$scores
+#fscores are already in a standardised form, hence do not need to normalise
+```
+
+Check assumptions to see whether our fscores are suitable for cluster analysis
+```{r}
+FscoresMatrix3 <- lowerCor(loan3_fscores)
+print(FscoresMatrix3)
+#no high correlation
+```
+
+#Hierarchical Cluster Analysis
+
+Define linkage methods, try all methods
+```{r}
+m <- c("average", "single", "complete", "ward")
+names(m) <- c("average", "single", "complete", "ward")
+```
+
+Compute agglomerative coefficient (Find metric that measures strength of the clusters, closer to 1 means stronger clusters) and compare agglomerative coefficient for each methods
+```{r}
+#Loan2
+ac <- function(x) {
+  agnes(loan2_fscores, method = x)$ac
+}
+
+sapply(m, ac)
+```
+```{r}
+#Loan3
+ac <- function(x) {
+  agnes(loan3_fscores, method = x)$ac
+}
+
+sapply(m, ac)
+```
+Ward’s minimum variance method have the highest agglomerative coefficient, hence we will use this method
+
+Calculate gap statistic for each number of clusters in loan2_fscores (up to 10 clusters)
+```{r}
+gap_stat_2 <- clusGap(loan2_fscores, FUN = hcut, nstart = 25, K.max = 10, B = 50)
+```
+
+Plot clusters vs. Gap statistic
+```{r}
+fviz_gap_stat(gap_stat_2)
+```
+Gap peaked at k = 4, meaning 4 clusters.
+
+Calculate gap statistic for each number of clusters in loan3_fscores (up to 10 clusters)
+```{r}
+gap_stat_3 <- clusGap(loan3_fscores, FUN = hcut, nstart = 25, K.max = 10, B = 50)
+```
+
+Plot clusters vs. Gap statistic
+```{r}
+fviz_gap_stat(gap_stat_3)
+```
+Gap sugggested we set cluster at k = 4
+
+Finding distance matrix, using euclidean distance calculation method
+```{r}
+distance_mat_2 <- dist(loan2_fscores, method = 'euclidean')
+distance_mat_3 <- dist(loan3_fscores, method = 'euclidean')
+```
+
+Fitting Hierarchical clustering Model to dataset
+```{r}
+set.seed(500)
+Hierar_cl_2 <- hclust(distance_mat_2, method = "ward")
+Hierar_cl_2
+```
+```{r}
+set.seed(500)
+Hierar_cl_3 <- hclust(distance_mat_3, method = "ward")
+Hierar_cl_3
+```
+
+Dendrogram Plot
+```{r}
+plot(Hierar_cl_2)
+```
+```{r}
+plot(Hierar_cl_3)
+```
+Both Dendograms are similar, model without outliers did show a clearer seperation between each clusters. However, size of each clusters should be observed too to better choose the model.
+
+Observe size of clusters
+```{r}
+#Apply number of clusters we chose and observe each cluster (number of observations)
+fit_2 <- cutree(Hierar_cl_2, k = 4)
+table(fit_2)
+```
+```{r}
+fit_3 <- cutree(Hierar_cl_3, k = 4)
+table(fit_3)
+```
+Though model without outliers has a more reasonable sized clusters, both models gives appropriate clusters. Therefore, we choose the model that is more stable throughout all data samples. This is done with validation as we want to validate of choosing model without outliers will be more stable.
+
+## Gap Validation
+Creating sample of 500 observations with different random seeds
+```{r}
+set.seed(400)
+loan2_sample_vali_id <- sample_n(loan2, 500)
+loan2_sample_vali <- loan2_sample_vali_id%>%select(!id)
+summary(loan2_sample_vali)
+
+#fscores for validation
+fa_orth5_q_vali <- principal(loan2_sample_vali, 5, rotate="quartimax", scores=TRUE)
+loan2_fscores_vali <- fa_orth5_q_vali$scores
+
+#Calculate gap statistic for each number of clusters in loan3_fscores (up to 10 clusters)
+gap_stat_2_vali <- clusGap(loan2_fscores_vali, FUN = hcut, nstart = 25, K.max = 10, B = 50)
+
+#Plot clusters vs. Gap statistic
+fviz_gap_stat(gap_stat_2_vali)
+```
+
+Creating sample of 500 observations with different random seeds
+```{r}
+set.seed(426)
+loan3_sample_vali_id <- sample_n(loan3_id, 500)
+loan3_sample_vali <- loan3_sample_vali_id%>%select(!id)
+summary(loan3_sample_vali)
+
+#fscores for validation
+fa3_orth4_v_vali <- principal(loan3_sample_vali, 4, rotate="varimax", scores=TRUE)
+loan3_fscores_vali <- fa3_orth4_v_vali$scores
+
+#Calculate gap statistic for each number of clusters in loan3_fscores (up to 10 clusters)
+gap_stat_3_vali <- clusGap(loan3_fscores_vali, FUN = hcut, nstart = 25, K.max = 10, B = 50)
+
+#Plot clusters vs. Gap statistic
+fviz_gap_stat(gap_stat_3_vali)
+
+distance_mat_3_vali <- dist(loan3_fscores_vali, method = 'euclidean')
+
+set.seed(500)
+Hierar_cl_3_vali <- hclust(distance_mat_3_vali, method = "ward")
+Hierar_cl_3_vali
+
+fit_3_vali <- cutree(Hierar_cl_3_vali, k = 4)
+table(fit_3_vali)
+```
+Here we can see that model from fscores without outliers together with varimax rotation at 4 factors is the most stable, meaning it suggests k=4 or 4 clusters for different random seeds. Hence, we will be choosing this model to produce clusters and interpret.
+
+## Interpretations
+
+Add lable and see for each observation row, which cluster that observation belongs to
+```{r}
+final_data_3 <- cbind(loan3_fscores, cluster = fit_3)
+head(final_data_3)
+```
+
+See characteristics of each clusters by average values of each factors
+```{r}
+hcentres_3 <- aggregate(x=final_data_3, by=list(cluster=fit_3), FUN="mean")
+print(hcentres_3)
+```
+Cluster 1 has a higher relation with factor 2
+Cluster 2 has a higher relation with factor 1
+Cluster 3 has a higher relation with factor 4
+Cluster 4 has a higher relation with factor 3
+
+Factors interpretation:
+```{r}
+print.psych(fa3_orth4_v, cut=0.3, sort=TRUE)
+```
+Factor 1: amount of money an individual is involved in transactions i.e. payments and loan
+Factor 2: risks assigned to that individual in respect to finance
+Factor 3: bank credits and bank balance
+Factor 4: stability of income
+
+# Cross Validation
+
+```{r}
+final_data_3_id <- cbind(loan3_sample_id, cluster=fit_3)
+final_data_3_id_vali <- cbind(loan3_sample_vali_id, cluster=fit_3_vali)
+```
+
+separate into clusters for original cluster sample
+```{r}
+cluster1_ori <- final_data_3_id %>% filter(cluster==1)
+cluster2_ori <- final_data_3_id %>% filter(cluster==2)
+cluster3_ori <- final_data_3_id %>% filter(cluster==3)
+cluster4_ori <- final_data_3_id %>% filter(cluster==4)
+```
+
+separate into clusters for validated sample
+```{r}
+cluster1_vali <- final_data_3_id_vali %>% filter(cluster==1)
+cluster2_vali <- final_data_3_id_vali %>% filter(cluster==2)
+cluster3_vali <- final_data_3_id_vali %>% filter(cluster==3)
+cluster4_vali <- final_data_3_id_vali %>% filter(cluster==4)
+```
+
+cross validation to check whether the same observations from both samples are clustered differently
+```{r}
+merge_cluster1_valicluster1 <- merge(cluster1_ori, cluster1_vali, by="id")
+merge_cluster1_valicluster2 <- merge(cluster1_ori, cluster2_vali, by="id")
+merge_cluster1_valicluster3 <- merge(cluster1_ori, cluster3_vali, by="id")
+merge_cluster1_valicluster4 <- merge(cluster1_ori, cluster4_vali, by="id")
+merge_cluster2_valicluster1 <- merge(cluster2_ori, cluster1_vali, by="id")
+merge_cluster2_valicluster2 <- merge(cluster2_ori, cluster2_vali, by="id")
+merge_cluster2_valicluster3 <- merge(cluster2_ori, cluster3_vali, by="id")
+merge_cluster2_valicluster4 <- merge(cluster2_ori, cluster4_vali, by="id")
+merge_cluster3_valicluster1 <- merge(cluster3_ori, cluster1_vali, by="id")
+merge_cluster3_valicluster2 <- merge(cluster3_ori, cluster2_vali, by="id")
+merge_cluster3_valicluster3 <- merge(cluster3_ori, cluster3_vali, by="id")
+merge_cluster3_valicluster4 <- merge(cluster3_ori, cluster4_vali, by="id")
+merge_cluster4_valicluster1 <- merge(cluster4_ori, cluster1_vali, by="id")
+merge_cluster4_valicluster2 <- merge(cluster4_ori, cluster2_vali, by="id")
+merge_cluster4_valicluster3 <- merge(cluster4_ori, cluster3_vali, by="id")
+merge_cluster4_valicluster4 <- merge(cluster4_ori, cluster4_vali, by="id")
+```
+
+There are 8 ids that appears in both the original and validation model, in which there are 5 same observations are placed in the same cluster for both the original model and the validation model, with only 3 differently clustered observations. 
+
+# Non-Hierarchical Cluster Analysis
+Clusters generated are similar to the hierarchical method, hence we will interpret using the clusters enerated by hierarchical cluster analysis method.
+
+Kmeans clustering with k=4
+```{r}
+set.seed(500)
+k_cl <- kmeans(loan3_fscores, 4, nstart=25)
+k_cl 
+```
