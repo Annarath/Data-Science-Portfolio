@@ -59,6 +59,7 @@ The purpose of this project is to practice more of EDA and data preparation for 
 <br />
 Resort Improvement Project (Python)
 <br />
+<br />
 [In Progress]
 This is the project where I requested our family resort's historical data to do EDA on, to see how each revenue source such as room booking, demand for extra services (such as extra bed and room services), cancelations and etc. correlates together. The purpose of this project is to observe the behaviour of customers of the resort and grab the unseen opportunities that may rise up after data analysis. 
 <br />
