@@ -18,6 +18,7 @@ This project is one of my assignments from the module Business Statistics from t
 <br />
 Optimisation Models (Python)
 <br />
+<br />
 These selections of models are, also, part of my assignment for the module Optimisation Model from the course MSc Business Analytics (Warwick Business School). This is my very first try of creating optimisation model from scratch on Python (I only tried it on STATA). The aim for this assignment was to generate own model from from given problem scenarios in excel, then link the data to Python to continue building models. I would like to highlight on the "Sauces Production Problem" as I am very proud to successfully tackled it.
 <br />
 <br />
