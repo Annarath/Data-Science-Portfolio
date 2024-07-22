@@ -13,6 +13,18 @@ I self-taught data science via online courses and projects for hands-on practice
 Personal Projects:
 <br />
 <br />
+Network Analysis (MSc Dissertation) (Python)
+<br />
+<br />
+This is my dissertation for my MSc Business Analytics degree. The aim of the project was to discover customers' purchasing behaviour using Product network. I transformed raw transaction records into adjacency matrix format to construct weighted edges product networks using NetworkX in Python. There are 22 communities of products identified by applying Louvain algorithm, which enables modularity maximisation. After achieving the results I conducted comprehensive assessment of the community of products to find meaningful product combinations that informs strategic business planning such as effective shelves arrangement, and marketing campaigns. I have achieved 1st degree mark for this project.
+<br />
+<br />
+Lending Club Cluster Analysis (R)
+<br />
+<br />
+In this project I incorporated Factor Analysis to rigorously pre-process data for cluster analysis. I have generated a stable and cross-validation-approved clustering model. As a result, extracted 4 insightful clusters of past loan borrowers to study their characteristics. This is to assist the recommendation to the lenders on borrower's loan default risks.
+<br />
+<br />
 Fire Services in London (R)
 <br />
 <br />
