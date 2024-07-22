@@ -16,7 +16,7 @@ Personal Projects:
 Network Analysis (MSc Dissertation) (Python)
 <br />
 <br />
-This is my dissertation for my MSc Business Analytics degree. The aim of the project was to discover customers' purchasing behaviour using Product network. I transformed raw transaction records into adjacency matrix format to construct weighted edges product networks using NetworkX in Python. There are 22 communities of products identified by applying Louvain algorithm, which enables modularity maximisation. After achieving the results I conducted comprehensive assessment of the community of products to find meaningful product combinations that informs strategic business planning such as effective shelves arrangement, and marketing campaigns. I have achieved 1st degree mark for this project.
+This is my dissertation for my MSc Business Analytics degree. The aim of the project was to discover customers' purchasing behaviour using Product network. I transformed raw transaction records into adjacency matrix format to construct weighted edges product networks using NetworkX in Python. There are 22 communities of products identified by applying Louvain algorithm, which enables modularity maximisation. After achieving the results I conducted comprehensive assessment of the community of products to find meaningful product combinations that informs strategic business planning such as effective shelves arrangement, and marketing campaigns. I have achieved 1st class mark for this project.
 <br />
 <br />
 Lending Club Cluster Analysis (R)
