@@ -10,6 +10,8 @@ This repository is my portfolio, storing Data Science Projects
 I self-taught data science via online courses and projects for hands-on practices which led me to continuing my Master's study in MSc Business Analytics. I am currently working as an Analyst in the Data Science and Analytics team. I am aiming to expand my knowledge and skills and progress my careers in this Data Science field.
 <br />
 <br />
+<br />
+<br />
 Personal Projects:
 <br />
 <br />
@@ -55,12 +57,11 @@ Small EDA on Pizza Price Data (R)
 The purpose of this project is to practice more of EDA and data preparation for use in the model (classification models). Data cleaning is performed as well as testing for information gain for a specific objective column.
 <br />
 <br />
-Projects are in Python language and is in both VSCode and Jupyter Notebook format.
-<br />
-<br />
 Resort Improvement Project (Python)
 <br />
 [In Progress]
+<br />
+<br />
 <br />
 <br />
 This is the project where I requested my family resort's historical data to do EDA on, to see how each revenue source such as room booking, demand for extra services (such as extra bed and room services), cancelations and etc. correlates together. The purpose of this project is to observe the behaviour of customers of the resort and grab the unseen opportunities that may rise up after data analysis.
