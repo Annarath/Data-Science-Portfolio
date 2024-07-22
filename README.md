@@ -10,6 +10,9 @@ This repository is my portfolio, storing Data Science Projects
 I self-taught data science via online courses and projects for hands-on practices which led me to continuing my Master's study in MSc Business Analytics. I am currently working as an Analyst in the Data Science and Analytics team. I am aiming to expand my knowledge and skills and progress my careers in this Data Science field.
 <br />
 <br />
+Personal Projects:
+<br />
+<br />
 Fire Services in London (R)
 <br />
 <br />
